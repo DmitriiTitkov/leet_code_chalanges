@@ -78,6 +78,34 @@ class Solution:
         return root
 
 
+class Solution:
+    def connect(self, root: 'Node') -> 'Node':
+        """
+        TODO: re-try time O(1) implementation
+        time: O(n)
+        space: O(1)
+        """
+        node  = root
+        curr = dummy = Node(0)
+        while node:
+            curr.next = node.left
+            if curr.next:
+                curr = curr.next
+
+            curr.next = node.right
+            if curr.next:
+                curr = curr.next
+
+            node = node.next
+            if not node:
+                curr = dummy
+                node = dummy.next
+
+        return root
+
+
+
+
 root = Solution().connect(
     Node(1, left=Node(2, left=Node(4), right=Node(5)), right=Node(3, right=Node(7)))
 )
