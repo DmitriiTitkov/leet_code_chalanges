@@ -46,14 +46,35 @@ class Solution:
         return permutate(nums, 0)
 
 
+class Solution2:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        """Backtracking algorithm that uses stack as permutation storage"""
+        def backtrack(nums: List[int], perm: List, res: List) -> List[List[int]]:
+            if len(nums) == 0:
+                res.append(perm[:])
+
+            for i in range(len(nums)):
+                new_nums = nums[:i] + nums[i+1:]  # exclude num[i] from use
+                perm.append(nums[i])
+                backtrack(new_nums, perm, res)
+                perm.pop()
+
+            return res
+
+        return backtrack(nums, [], [])
+
+
 @pytest.mark.parametrize(
-    "input_list,expected_list",
+    "solution,input_list,expected_list",
     (
-        ([1, 2, 3], [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 2, 1], [3, 1, 2]]),
-        ([1], [[1]]),
-        ([5, 6], [[5, 6], [6, 5]]),
+        (Solution, [1, 2, 3], [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 2, 1], [3, 1, 2]]),
+        (Solution, [1], [[1]]),
+        (Solution, [5, 6], [[5, 6], [6, 5]]),
+        (Solution2, [1, 2, 3], [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]),
+        (Solution2, [1], [[1]]),
+        (Solution2, [5, 6], [[5, 6], [6, 5]]),
 
     )
 )
-def test_combine(input_list, expected_list):
-    assert Solution().permute(input_list) == expected_list
+def test_combine(solution,input_list, expected_list):
+    assert solution().permute(input_list) == expected_list
