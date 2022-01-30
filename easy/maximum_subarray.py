@@ -71,6 +71,46 @@ class Solution2:
         return max_cont_sub
 
 
+class Solution3:
+    def maxSubArray(self, nums: List[int]) -> int:
+        """
+        Divide and Conquer. split array in halfs and calculate each half
+        recursively. For each execution choose max of lms, rms, cms where:
+        lms: Maximum sum in left subarray
+        rms: Maximum sum in right subarray
+        cms: Maximum sum of cross-section array(Array that starts in left half
+        and ends in right half).
+
+        """
+
+        def max_sub(nums: List[int]) -> int:
+            if len(nums) == 1:
+                return nums[0]
+
+            mid = len(nums) // 2
+
+            lms = max_sub(nums[0:mid])
+            rms = max_sub(nums[mid:])
+
+            max_l = nums[mid-1]
+            cur_sum = nums[mid-1]
+            for i in range(mid-2, -1, -1):
+                cur_sum += nums[i]
+                max_l = max(cur_sum, max_l)
+
+            max_r = nums[mid]
+            cur_sum = nums[mid]
+            for i in range(mid+1, len(nums)):
+                cur_sum += nums[i]
+                max_r = max(cur_sum, max_r)
+
+            cms = max_l + max_r
+            return max(lms, rms, cms)
+
+        return max_sub(nums)
+
+
+
 @pytest.mark.parametrize(
     'solution', (Solution, Solution2)
 )
