@@ -75,6 +75,38 @@ class Solution:
         return "".join(res)
 
 
+class Solution2:
+    def convert(self, s: str, numRows: int) -> str:
+        """With a little hint I understand that it's easy to flip solution and
+        process data by row instead of by column.
+        Time: O(n)
+        Space: O(n)
+        """
+        if numRows <= 1 or numRows > len(s):
+            return s
+
+        # it's possible to use string but it will result in higher time
+        # complexity, due to string concatenation nature
+        res = [list() for x in range(numRows)]
+        row = 0
+
+        for char in s:
+            res[row].append(char)
+
+            if row == 0:
+                step = 1
+            elif row == numRows - 1:
+                step = -1
+
+            row += step
+
+        # O(n/numRows) * NumRows = O(n)
+        return "".join("".join(x) for x in res)
+
+
+@pytest.mark.parametrize(
+    "solution", [Solution, Solution2]
+)
 @pytest.mark.parametrize(
     "input_str,num,expected_output",
     (
@@ -83,5 +115,5 @@ class Solution:
         ("AB", 1, "AB"),
     )
 )
-def test_combine(input_str, num, expected_output):
-    assert Solution().convert(input_str, num) == expected_output
+def test_combine(solution, input_str, num, expected_output):
+    assert solution().convert(input_str, num) == expected_output
