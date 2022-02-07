@@ -56,14 +56,38 @@ class Solution:
         return climb(n)
 
 
+class Solution2:
+    def climbStairs(self, n: int) -> int:
+        """Dynamic programming solution. Became easier when I discovered
+        Fibonacci sequence in results.
+        Time: O(n)
+        Space: O(1)
+        """
+        count_one_step_before = 1
+        count_two_steps_before = 0
+
+        for i in range(1, n+1):
+            current_count = count_one_step_before + count_two_steps_before
+            count_two_steps_before = count_one_step_before
+            count_one_step_before = current_count
+
+        return count_one_step_before
+
+
+@pytest.mark.parametrize(
+    "solution", (Solution, Solution2)
+)
 @pytest.mark.parametrize(
     "input_num,expected_output",
     (
         (2, 2),
         (3, 3),
+        (4, 5),
+        (5, 8),
+        (6, 13),
         (20, 10946),
 
     )
 )
-def test_combine(input_num,expected_output):
-    assert Solution().climbStairs(input_num) == expected_output
+def test_combine(solution, input_num,expected_output):
+    assert solution().climbStairs(input_num) == expected_output
