@@ -89,5 +89,5 @@ class Solution2:
 
     )
 )
-def test_combine(solution, input_num,expected_output):
+def test_climb_stairs(solution, input_num,expected_output):
     assert solution().climbStairs(input_num) == expected_output
