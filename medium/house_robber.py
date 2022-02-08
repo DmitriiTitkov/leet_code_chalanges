@@ -27,6 +27,7 @@ Constraints:
 1 <= nums.length <= 100
 0 <= nums[i] <= 400
 """
+from functools import cache, lru_cache
 from typing import List
 
 import pytest
@@ -52,6 +53,31 @@ class Solution:
         return max(money_house_before, money_two_houses_before)
 
 
+class Solution2:
+    def rob(self, nums: List[int]) -> int:
+        """
+        Depth-fist search with memorization.
+        Time: O(n)
+        Space: O(n)
+        """
+        @lru_cache()
+        def rob_the_house(curr: int) -> int:
+            if curr == len(nums) - 1:
+                return nums[curr]
+
+            next_house = rob_the_house(curr+1)
+            another_house = 0
+            if curr < len(nums) - 2:
+                another_house = rob_the_house(curr+2)
+
+            return max(next_house, another_house + nums[curr])
+
+        return rob_the_house(0)
+
+
+@pytest.mark.parametrize(
+    "solution", (Solution, Solution2)
+)
 @pytest.mark.parametrize(
     "nums,expected_output",
     (
@@ -62,5 +88,5 @@ class Solution:
         ([1], 1),
     )
 )
-def test_rob(nums, expected_output):
-    assert Solution().rob(nums) == expected_output
+def test_rob(solution, nums, expected_output):
+    assert solution().rob(nums) == expected_output
