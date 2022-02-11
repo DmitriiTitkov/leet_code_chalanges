@@ -29,6 +29,7 @@ triangle[i].length == triangle[i - 1].length + 1
 Follow up: Could you do this using only O(n) extra space, where n is the total
 number of rows in the triangle?
 """
+from functools import lru_cache
 from typing import List
 
 import pytest
@@ -59,6 +60,36 @@ class Solution:
         return min(triangle[-1])
 
 
+class Solution2:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        """
+
+        Time: O(n)
+        Space: O(n+h)
+        """
+        @lru_cache
+        def find_min_path(row: int, pos: int) -> int:
+            if row == len(triangle)-1:
+                return triangle[row][pos]
+
+            path_sum = min(
+                (
+                    find_min_path(row+1, pos),
+                    find_min_path(row+1, pos+1),
+                )
+            )
+
+            return path_sum + triangle[row][pos]
+
+        return find_min_path(0, 0)
+
+
+@pytest.mark.parametrize(
+    "solution", (
+            Solution2,  # Used first as it mutates triangle
+            Solution,
+    )
+)
 @pytest.mark.parametrize(
     "triangle,expected_output",
     (
@@ -66,5 +97,5 @@ class Solution:
         ([[1]], 1),
     )
 )
-def test_minimum_total(triangle, expected_output):
-    assert Solution().minimumTotal(triangle) == expected_output
+def test_minimum_total(solution, triangle, expected_output):
+    assert solution().minimumTotal(triangle) == expected_output
