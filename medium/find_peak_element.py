@@ -30,6 +30,12 @@ import pytest
 
 
 class Solution:
+    """
+    Time: O(logn)
+    Space: O(1)
+    Simple peak search based on element order by checking right and left
+    neighbors
+    """
     def findPeakElement(self, nums: List[int]) -> int:
         l, r = 0, len(nums) - 1
 
