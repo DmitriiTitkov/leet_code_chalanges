@@ -52,17 +52,11 @@ class Solution:
             left_interval = firstList[left_curr]
             right_interval = secondList[right_curr]
 
-            if left_interval[0] > right_interval[1]:
-                right_curr += 1
-                continue
-
-            if left_interval[1] < right_interval[0]:
-                left_curr += 1
-                continue
-
             interval_start = max([left_interval[0], right_interval[0]])
             interval_end = min([left_interval[1], right_interval[1]])
-            res.append([interval_start, interval_end])
+
+            if interval_start <= interval_end:
+                res.append([interval_start, interval_end])
 
             if left_interval[1] > right_interval[1]:
                 right_curr += 1
