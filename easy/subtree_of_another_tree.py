@@ -21,7 +21,6 @@ The number of nodes in the subRoot tree is in the range [1, 1000].
 -104 <= subRoot.val <= 104
 """
 from typing import Optional
-from hashlib import sha256
 
 
 # Definition for a binary tree node.
@@ -72,7 +71,7 @@ class Solution:
         return False
 
 
-class Solution:
+class Solution2:
     """Merkle tree approach, travese both trees and hash them, then compare hashes.
     Time: O(n + m)
     Space: O(n + m)
@@ -100,6 +99,9 @@ class Solution:
 
 
 @pytest.mark.parametrize(
+    "solution", (Solution, Solution2)
+)
+@pytest.mark.parametrize(
     "tree,subtree,expected_result",
     (
         (
@@ -115,5 +117,5 @@ class Solution:
 
     )
 )
-def test_is_subtree(tree, subtree, expected_result):
-    assert Solution().isSubtree(tree, subtree) == expected_result
+def test_is_subtree(solution, tree, subtree, expected_result):
+    assert solution().isSubtree(tree, subtree) == expected_result
