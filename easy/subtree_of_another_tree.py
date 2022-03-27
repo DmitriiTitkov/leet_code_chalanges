@@ -21,9 +21,13 @@ The number of nodes in the subRoot tree is in the range [1, 1000].
 -104 <= subRoot.val <= 104
 """
 from typing import Optional
+from hashlib import sha256
 
 
 # Definition for a binary tree node.
+import pytest
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -66,3 +70,50 @@ class Solution:
             return True
 
         return False
+
+
+class Solution:
+    """Merkle tree approach, travese both trees and hash them, then compare hashes.
+    Time: O(n + m)
+    Space: O(n + m)
+    """
+    def merkle(self, node: Optional[TreeNode]) -> str:
+        if node is None:
+            return "#"
+        node.merkle = str(hash(self.merkle(node.left) + str(node.val) + self.merkle(node.right)))
+        return node.merkle
+
+    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+        self.merkle(root)
+        self.merkle(subRoot)
+
+        def merkle_dfs(root: Optional[TreeNode], sub_root_hash):
+            if root is None:
+                return False
+
+            if root.merkle == subRoot.merkle:
+                return True
+            else:
+                return merkle_dfs(root.left, sub_root_hash) or merkle_dfs(root.right, sub_root_hash)
+
+        return merkle_dfs(root, subRoot.merkle)
+
+
+@pytest.mark.parametrize(
+    "tree,subtree,expected_result",
+    (
+        (
+            TreeNode(3, left=TreeNode(4, left=TreeNode(1), right=TreeNode(2)), right=TreeNode(5)),
+            TreeNode(4, left=TreeNode(1), right=TreeNode(2)),
+            True,
+        ),
+        (
+            TreeNode(3, left=TreeNode(4, left=TreeNode(1), right=TreeNode(2, right=TreeNode(0))), right=TreeNode(5)),
+            TreeNode(4, left=TreeNode(1), right=TreeNode(2)),
+            False,
+        ),
+
+    )
+)
+def test_is_subtree(tree, subtree, expected_result):
+    assert Solution().isSubtree(tree, subtree) == expected_result
