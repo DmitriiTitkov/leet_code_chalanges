@@ -49,6 +49,30 @@ class Solution:
         return dfs(graph, 0, [], [])
 
 
+class Solution2:
+    """
+    DFS iterative
+
+    """
+    def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:
+
+        stack = [(0, [0])]
+        res = []
+        cur_res = []
+
+        while stack:
+            cur_node, cur_path = stack.pop()
+
+            if cur_node == len(graph) -1:
+                res.append(cur_path)
+            else:
+                for next_node in graph[cur_node]:
+                    stack.append((next_node, cur_path.append(next_node)))
+
+
+        return res
+
+
 @pytest.mark.parametrize(
     "graph,expected_result",
     (
