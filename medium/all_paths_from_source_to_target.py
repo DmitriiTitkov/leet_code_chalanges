@@ -51,14 +51,12 @@ class Solution:
 
 class Solution2:
     """
-    DFS iterative
-
+    DFS iterative.
     """
     def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:
 
         stack = [(0, [0])]
         res = []
-        cur_res = []
 
         while stack:
             cur_node, cur_path = stack.pop()
@@ -67,25 +65,36 @@ class Solution2:
                 res.append(cur_path)
             else:
                 for next_node in graph[cur_node]:
-                    stack.append((next_node, cur_path.append(next_node)))
-
+                    stack.append((next_node, cur_path + [next_node]))
 
         return res
 
 
 @pytest.mark.parametrize(
-    "graph,expected_result",
+    "solution,graph,expected_result",
     (
         (
+            Solution,
             [[1, 2], [3], [3], []],
             [[0, 1, 3], [0, 2, 3]],
         ),
+(
+            Solution2,
+            [[1, 2], [3], [3], []],
+            [[0, 2, 3], [0, 1, 3]],
+        ),
         (
+            Solution,
             [[4, 3, 1], [3, 2, 4], [3], [4], []],
             [[0, 4], [0, 3, 4], [0, 1, 3, 4], [0, 1, 2, 3, 4], [0, 1, 4]],
+        ),
+        (
+            Solution2,
+            [[4, 3, 1], [3, 2, 4], [3], [4], []],
+            [[0, 1, 4], [0, 1, 2, 3, 4], [0, 1, 3, 4], [0, 3, 4], [0, 4]],
         ),
     )
 
 )
-def test_all_paths(graph,expected_result):
-    assert Solution().allPathsSourceTarget(graph) == expected_result
+def test_all_paths(solution, graph, expected_result):
+    assert solution().allPathsSourceTarget(graph) == expected_result
