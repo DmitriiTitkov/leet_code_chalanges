@@ -43,3 +43,23 @@ class Solution:
         dfs(nums, [])
 
         return res
+
+
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        perm = []
+
+        for i, num in enumerate(nums):
+
+            for j in range(len(nums) - 1):
+                if j == i:
+                    continue
+
+                for n in nums[:j] + nums[j + 1:]:
+                    perm.append(nums[j])
+
+            res.append(perm)
+
+        return res
+
