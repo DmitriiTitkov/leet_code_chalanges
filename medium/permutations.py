@@ -64,6 +64,27 @@ class Solution2:
         return backtrack(nums, [], [])
 
 
+class Solution3:
+    """Iterative solution using stack"""
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        stack = [([], nums)]
+
+        while stack:
+            perm, sub_nums = stack.pop()
+
+            if len(perm) == len(nums):
+                res.append(perm)
+                continue
+
+            for i, num in enumerate(sub_nums):
+                perm.append(num)
+                stack.append((perm[:], sub_nums[:i] + sub_nums[i + 1:]))
+                perm.pop()
+
+        return res
+
+
 @pytest.mark.parametrize(
     "solution,input_list,expected_list",
     (
@@ -73,6 +94,9 @@ class Solution2:
         (Solution2, [1, 2, 3], [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]),
         (Solution2, [1], [[1]]),
         (Solution2, [5, 6], [[5, 6], [6, 5]]),
+        (Solution3, [1, 2, 3], [[3, 2, 1], [3, 1, 2], [2, 3, 1], [2, 1, 3], [1, 3, 2], [1, 2, 3]]),
+        (Solution3, [1], [[1]]),
+        (Solution3, [5, 6], [[6, 5], [5, 6]]),
 
     )
 )
