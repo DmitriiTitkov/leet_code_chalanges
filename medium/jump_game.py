@@ -25,15 +25,20 @@ import pytest
 
 
 class Solution:
+    """
+    Use moving boundary to iterate over the array
+    Time: O(n)
+    Space: O(1)
+    """
     def canJump(self, nums: List[int]) -> bool:
         cur = 0
-        right_boundry = 0
+        right_boundary = 0
 
-        while cur <= right_boundry:
+        while cur <= right_boundary:
             if cur == len(nums) - 1:
                 return True
-            right_boundry = max((
-                right_boundry,
+            right_boundary = max((
+                right_boundary,
                 cur + nums[cur]
             ))
             cur += 1
