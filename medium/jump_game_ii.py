@@ -21,12 +21,16 @@ Constraints:
 """
 from typing import List
 
+import pytest
+
 
 class Solution:
+    """Iterate over array and remember the max jum you can make. Decrease jump
+    and max jump with each step and increment total jumps when switching them.
+    Time: O(n)
+    Space: O(1)
+    """
     def jump(self, nums: List[int]) -> int:
-        # 2, 3, 1, 1, 4
-        #    1
-        # .      2|
         if len(nums) == 1:
             return 0
 
@@ -36,22 +40,30 @@ class Solution:
         cur_jump = nums[0]
         i = 0
 
-        while i < len(nums ) -1:
-            for j in range(i, i+ cur_jump + 1):
-                next_max_jump -= 1
-                if j == len(nums) - 1:
-                    break
-                next_max_jump = max((
-                    next_max_jump,
-                    nums[j]
-                ))
+        while i < len(nums) - 2:
+            i += 1
+            next_max_jump -= 1
+            cur_jump -= 1
 
-            i = j
+            next_max_jump = max((
+                next_max_jump,
+                nums[i]
+            ))
 
-            if i == len(nums) - 1:
-                break
-            total_jumps += 1
-            cur_jump = next_max_jump
+            if cur_jump == 0:
+                total_jumps += 1
+                cur_jump = next_max_jump
 
         return total_jumps
 
+
+@pytest.mark.parametrize(
+    "nums,expected_output",
+    (
+        ([2, 3, 1, 1, 4], 2),
+        ([2, 3, 0, 1, 4], 2),
+
+    )
+)
+def test_jump_game(nums, expected_output):
+    assert Solution().jump(nums) == expected_output
