@@ -31,7 +31,10 @@ import pytest
 
 
 class Solution:
-    """DFS solution with memorization"""
+    """DFS solution with memorization
+    Time: O(n)
+    Space: O(n)
+    """
     def uniquePaths(self, m: int, n: int) -> int:
 
         @lru_cache
