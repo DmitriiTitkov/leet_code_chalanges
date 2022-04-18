@@ -55,6 +55,35 @@ class Solution:
         return dfs(m - 1, n - 1)
 
 
+class Solution2:
+    """DP approach. Consider each cell as a sum of right and down cells.
+    Time: O(N) - where N = m*n  number of cells
+    Space: O(min(m,n)) - applied optimization to store minimal amount of cells.
+
+    """
+    def uniquePaths(self, m: int, n: int) -> int:
+        if m <= n:
+            low = m
+            high = n
+        else:
+            low = n
+            high = m
+
+        memo = [0] * low
+        memo[low - 1] = 1
+
+        for col in range(high - 1, -1, -1):
+            prev = 0
+            for row in range(low - 1, -1, -1):
+                memo[row] = memo[row] + prev
+                prev = memo[row]
+
+        return memo[0]
+
+
+@pytest.mark.parametrize(
+    "solution", (Solution, Solution2)
+)
 @pytest.mark.parametrize(
     "m,n,expected_result",
     (
@@ -62,5 +91,5 @@ class Solution:
         (3, 2, 3),
     )
 )
-def test_unique_paths(m, n, expected_result):
-    assert Solution().uniquePaths(m, n) == expected_result
+def test_unique_paths(solution, m, n, expected_result):
+    assert solution().uniquePaths(m, n) == expected_result
