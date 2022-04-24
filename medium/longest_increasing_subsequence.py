@@ -26,12 +26,19 @@ Constraints:
 
 Follow up: Can you come up with an algorithm that runs in O(n log(n)) time
 """
+from bisect import bisect, bisect_left
+from functools import lru_cache
 from typing import List
 
 import pytest
 
 
 class Solution:
+    """
+    DP Solution.
+    Time: O(n*n)
+    Space: O(n)
+    """
     def lengthOfLIS(self, nums: List[int]) -> int:
         dp = [1] * len(nums)
 
@@ -43,12 +50,59 @@ class Solution:
         return max(dp)
 
 
+class Solution2:
+    """
+    DFS
+    Time: O(n*n)
+    Space: O()
+    """
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        @lru_cache(maxsize=None)
+        def dfs(index):
+            longest = 1
+            for i in range(index+1, len(nums)):
+                if nums[i] > nums[index]:
+                    longest = max((dfs(i) + 1, longest))
+
+            return longest
+
+        longest = 1
+        for i in range(len(nums)):
+            longest = max((dfs(i), longest))
+        return longest
+
+
+class Solution3:
+    """
+    Greedy with binary search.
+    Time: O(N * logN)
+    Space: O(N)
+    """
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        lis = []
+
+        for i in range(len(nums)):
+            if not lis or lis[-1] < nums[i]:
+                lis.append(nums[i])
+            elif lis[-1] > nums[i]:
+                new_i = bisect_left(lis, nums[i])
+                lis[new_i] = nums[i]
+
+        return len(lis)
+
+
+
+@pytest.mark.parametrize(
+    "solution", [Solution, Solution2, Solution3]
+)
 @pytest.mark.parametrize(
     "nums,expected_result", (
+        ([2, 5, 3, 7, 101, 18], 4),
         ([10, 9, 2, 5, 3, 7, 101, 18], 4),
         ([0, 1, 0, 3, 2, 3], 4),
         ([7, 7, 7, 7, 7, 7, 7], 1),
+        ([4,10,4,3,8,9], 3),
     )
 )
-def test_length_of_lis(nums, expected_result):
-    assert Solution()
+def test_length_of_lis(solution, nums, expected_result):
+    assert solution().lengthOfLIS(nums) == expected_result
