@@ -27,56 +27,54 @@ prerequisites[i].length == 2
 0 <= ai, bi < numCourses
 All the pairs prerequisites[i] are unique.
 """
-from collections import defaultdict
-from typing import List
+from collections import defaultdict, deque
+from typing import List, Set
+
+import pytest
 
 
 class Solution:
     """
     Topological sort. Find node with 0 in-degree(edges directed to the node)
     remove it and remove all the edges that start from it.
-    Time: O(n + p + (n * n))
+    Time: O(E + V) amount of edges + amount of vertices
+    Space: O(E + E + E) graph, indegree and queue
     """
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        if not prerequisites:
-            return True
 
-        dep_graph = defaultdict(set)
+        course_graph: List[Set[int]] = [set() for _ in range(numCourses)]
+        indegrees = [0] * numCourses
+        queue = deque()
+        courses_taken = 0
 
-        # O(n)
-        for num in range(numCourses):
-            dep_graph[num]
+        for course, dep in prerequisites:
+            if course == dep:
+                return False
+            course_graph[dep].add(course)
+            indegrees[course] += 1
 
-        # O(p)
-        for cur, dep in prerequisites:
-            dep_graph[cur].add(dep)
-            dep_graph[dep]
+        for vertex, indeg in enumerate(indegrees):
+            if indeg == 0:
+                queue.appendleft(vertex)
 
-        num_of_taken = 0
+        while queue:
+            vertex = queue.pop()
+            courses_taken += 1
+            for next_vert in course_graph[vertex]:
+                indegrees[next_vert] -= 1
 
-        # O(n)
-        while dep_graph or num_of_taken < numCourses:
-            no_dep_node = None
+                if indegrees[next_vert] == 0:
+                    queue.appendleft(next_vert)
 
-            # O(n)
-            for vertex, deps in dep_graph.items():
-                if len(deps) == 0:
-                    no_dep_node = vertex
-                    break
-
-            if no_dep_node == None:
-                # Cycle found
-                break
-
-            num_of_taken += 1
-            del dep_graph[no_dep_node]
-
-            # O(n)
-            for vertex in dep_graph:
-                if no_dep_node in dep_graph[vertex]:
-                    dep_graph[vertex].remove(no_dep_node)
-
-        return num_of_taken >= numCourses
+        return courses_taken >= numCourses
 
 
-
+@pytest.mark.parametrize(
+    "numCourses,prerequisites,expected_output",
+    (
+        (2, [[1, 0]], True),
+        (3, [[1,0],[1,2],[0,1]], False),
+    )
+)
+def test_can_finish(numCourses, prerequisites, expected_output):
+    assert Solution().canFinish(numCourses,prerequisites) == expected_output
