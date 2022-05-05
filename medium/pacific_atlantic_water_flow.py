@@ -36,6 +36,10 @@ from typing import List
 
 
 class Solution:
+    """
+    Time: O(mn) due to memorization
+    Space: O(mn)
+    """
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
         num_rows = len(heights)
         num_cols = len(heights[0])
