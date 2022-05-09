@@ -64,6 +64,10 @@ int_to_rom = {
 
 
 class Solution:
+    """
+    Time: O(n)
+    Space: O(n) if count response
+    """
     def intToRoman(self, num: int) -> str:
         res = []
         for rom_part in int_to_rom:
