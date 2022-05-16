@@ -66,7 +66,9 @@ class Solution2:
         return [v for v in anagrams.values()]
 
 
-
+@pytest.mark.parametrize(
+    "solution", [Solution, Solution2]
+)
 @pytest.mark.parametrize(
     "strs,expected_output",
     (
@@ -82,5 +84,5 @@ class Solution2:
         ),
     )
 )
-def test_group_anagrams(strs, expected_output):
-    assert Solution().groupAnagrams(strs) == expected_output
+def test_group_anagrams(solution, strs, expected_output):
+    assert solution().groupAnagrams(strs) == expected_output
