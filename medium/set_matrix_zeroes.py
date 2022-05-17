@@ -55,6 +55,49 @@ class Solution:
                     matrix[row][col] = 0
 
 
+class Solution2:
+    """
+    Use first row and first column to store flags regarding column and row filling
+    Time: O(n*m)
+    Space: O(1)
+    """
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        num_rows = len(matrix)
+        num_cols = len(matrix[0])
+
+        fill_first_row = fill_first_col = False
+
+        for row in range(num_rows):
+            if matrix[row][0] == 0:
+                fill_first_col = True
+
+        for col in range(num_cols):
+            if matrix[0][col] == 0:
+                fill_first_row = True
+
+        for row in range(1, num_rows):
+            for col in range(1, num_cols):
+                if matrix[row][col] == 0:
+                    matrix[0][col] = 0
+                    matrix[row][0] = 0
+
+        for row in range(1, num_rows):
+            for col in range(1, num_cols):
+                if matrix[row][0] == 0 or matrix[0][col] == 0:
+                    matrix[row][col] = 0
+
+        if fill_first_col:
+            for row in range(num_rows):
+                matrix[row][0] = 0
+
+        if fill_first_row:
+            for col in range(num_cols):
+                matrix[0][col] = 0
+
+
 @pytest.mark.parametrize(
     "matrix,expected_output", (
         (
