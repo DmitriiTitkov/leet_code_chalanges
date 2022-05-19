@@ -49,6 +49,33 @@ class Solution:
             start = i
 
 
+class Solution2:
+    """Dutch flag algorithm, use mid pointer and decide on which direction to
+    swap based on the number.
+    Time: O(n)
+    Space: O(1)
+    """
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        left, mid, right = 0, 0, len(nums)-1
+
+        while mid <= right:
+            if nums[mid] == 0:
+                nums[left], nums[mid] = nums[mid], nums[left]
+                left += 1
+                mid += 1
+            elif nums[mid] == 1:
+                mid += 1
+            else:
+                nums[mid], nums[right] = nums[right], nums[mid]
+                right -= 1
+
+
+@pytest.mark.parametrize(
+    "solution", (Solution, Solution2)
+)
 @pytest.mark.parametrize(
     "nums,expected_output",
     (
@@ -56,6 +83,6 @@ class Solution:
         ([2, 0, 1], [0, 1, 2]),
     )
 )
-def test_sort_colors(nums, expected_output):
-    Solution().sortColors(nums)
+def test_sort_colors(solution, nums, expected_output):
+    solution().sortColors(nums)
     assert nums == expected_output
