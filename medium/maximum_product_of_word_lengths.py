@@ -54,6 +54,30 @@ class Solution:
         return max_prod
 
 
+class Solution2:
+    """
+    Use bit masks for comparison
+    Time: O(n^2)
+    Space: O(n)
+    n - number of words
+    """
+    def maxProduct(self, words: List[str]) -> int:
+        words_length = len(words)
+        masks = [0] * words_length
+
+        for i, word in enumerate(words):
+            for char in word:
+                masks[i] |= 1 << (ord(char) - ord('a'))
+
+        max_product = 0
+        for i in range(words_length):
+            for j in range(i + 1, words_length):
+                if masks[i] & masks[j] == 0:
+                    max_product = max(max_product, len(words[i]) * len(words[j]))
+
+        return max_product
+
+
 @pytest.mark.parametrize(
     "nums,expected_output", (
         (["abcw","baz","foo","bar", "xtfn", "abcdef"], 16),
