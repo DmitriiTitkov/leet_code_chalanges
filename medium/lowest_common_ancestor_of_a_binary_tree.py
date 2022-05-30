@@ -41,6 +41,13 @@ class TreeNode:
 
 
 class Solution:
+    """
+    Traverse the tree twice an compare paths
+    Time: O(n)
+    Space: O(n) - worst case for skewed tree
+
+    n - number of nodes in the tree
+    """
     def find_node_path(
             self,
             root: 'TreeNode',
