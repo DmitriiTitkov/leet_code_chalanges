@@ -23,6 +23,8 @@ Constraints:
 """
 from typing import List
 
+import pytest
+
 
 class Solution:
     """
@@ -34,3 +36,13 @@ class Solution:
         for i in range(1, len(nums)):
             nums[i] = nums[i] + nums[i-1]
         return nums
+
+@pytest.mark.parametrize(
+    "nums,expected_output", (
+        ([1,2,3,4], [1,3,6,10]),
+        ([1,1,1,1,1], [1,2,3,4,5]),
+        ([3,1,2,10,1], [3,4,6,16,17]),
+    )
+)
+def test_running_sum(nums,expected_output):
+    assert Solution().runningSum(nums) == expected_output
