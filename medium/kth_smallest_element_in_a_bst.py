@@ -54,3 +54,26 @@ class Solution:
 
         traverse_inorder(root)
         return self.last_visited
+
+
+class Solution2:
+    """Iterative search
+    Time: O(n)
+    Space: O(n)
+
+    n - number of nodes
+    """
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        stack = []
+
+        while True:
+            while root:
+                stack.append(root)
+                root = root.left
+
+            root = stack.pop()
+            k -= 1
+            if k == 0:
+                return root.val
+
+            root = root.right
