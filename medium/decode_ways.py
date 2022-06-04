@@ -72,6 +72,31 @@ class Solution:
         return decode_from_index(0)
 
 
+class Solution2:
+    """
+    DP with tabulation.
+    Time: O(n)
+    Space: O(n)
+    """
+    def numDecodings(self, s: str) -> int:
+        length = len(s)
+        dp = [0] * length
+        dp[length - 1] = 1 if s[length - 1] in decode_options else 0
+
+        for i in range(length - 2, -1, -1):
+            if s[i] in decode_options:
+                dp[i] = dp[i + 1]
+
+            if s[i:i + 2] in decode_options:
+                prev_decode_opts = dp[i + 2] if i < length - 2 else 1
+                dp[i] += prev_decode_opts
+
+        return dp[0]
+
+
+@pytest.mark.parametrize(
+    "solution", [Solution, Solution2]
+)
 @pytest.mark.parametrize(
     "s,expected_output", (
         ("12", 2),
@@ -79,5 +104,5 @@ class Solution:
         ("06", 0),
     )
 )
-def test_num_decodings(s,expected_output):
-    assert Solution().numDecodings(s) == expected_output
+def test_num_decodings(solution, s, expected_output):
+    assert solution().numDecodings(s) == expected_output
