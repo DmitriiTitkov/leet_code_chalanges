@@ -62,6 +62,32 @@ class Solution:
         return False
 
 
+class Solution2:
+    """
+    We iterate over array and use left and mid pointers. As we have a number
+    that is greater than mid we know that sequence exist. We can safely update
+    left pointer as mid remains the same until more appropriate mid is found.
+    Time: O(n)
+    Space: O(1)
+    """
+    def increasingTriplet(self, nums: List[int]) -> bool:
+        left = nums[0]
+        mid = float("inf")
+
+        for n in nums:
+            if n < mid and n > left:
+                mid = n
+            elif n > mid:
+                return True
+            elif n < mid and n < left:
+                left = n
+
+        return False
+
+
+@pytest.mark.parametrize(
+    "solution", (Solution, Solution2),
+)
 @pytest.mark.parametrize(
     "nums,expected_output", (
         ([1, 2, 3, 4, 5], True),
@@ -70,5 +96,5 @@ class Solution:
 
     )
 )
-def test_increasing_triplet(nums, expected_output):
-    assert Solution().increasingTriplet(nums) == expected_output
+def test_increasing_triplet(solution, nums, expected_output):
+    assert solution().increasingTriplet(nums) == expected_output
