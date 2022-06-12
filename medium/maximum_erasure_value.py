@@ -26,6 +26,12 @@ import pytest
 
 
 class Solution:
+    """
+    Use sliding window to find max subarray
+    Time: O(n)
+    Space: O(n)
+    n - number of elements in nums
+    """
     def maximumUniqueSubarray(self, nums: List[int]) -> int:
         subarray = set()
         l = 0
