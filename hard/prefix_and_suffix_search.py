@@ -32,6 +32,7 @@ Constraints:
 words[i], prefix and suffix consist of lower-case English letters only.
 At most 15000 calls will be made to the function f.
 """
+from itertools import zip_longest
 from typing import List
 
 
@@ -86,6 +87,62 @@ class WordFilter:
         keys = pref_keys & suff_keys
         return max(keys) if keys else -1
 
-# Your WordFilter object will be instantiated and called as such:
-# obj = WordFilter(words)
-# param_1 = obj.f(prefix,suffix)
+
+class WordFilter2:
+    # TODO: refactor Trie as default dict?
+    """
+    Use on trie to store combination for pref and suffix. If pref and suff are
+    different length store longest + None for shortest.
+    Time:
+        init: O(n*k^2)
+        f: O(k)
+    """
+    def __init__(self, words: List[str]):
+        self.trie = TrieNode("#")
+
+        for index, word in enumerate(words):
+            self._add_word(word, index, self.trie)  # k
+
+    def _add_word(self, word: str, index: int, trie: TrieNode):
+        # k ^ 2
+        for i in range(len(word)):
+
+            cur = trie
+            for char in word[i:]:
+                key = (char, None)
+                if key not in cur.links:
+                    cur.links[key] = TrieNode(key)
+
+                cur = cur.links[key]
+                cur.key = index
+
+            cur = trie
+            for char in word[:-i or None][::-1]:
+                key = (None, char)
+                if key not in cur.links:
+                    cur.links[key] = TrieNode(key)
+
+                cur = cur.links[key]
+                cur.key = index
+
+            key = (word[i], word[-i - 1])
+            if key not in trie.links:
+                trie.links[key] = TrieNode(key)
+
+            trie = trie.links[key]
+            trie.key = index
+
+    def _find_keys(self, pref: str, suff: str) -> set:
+        trie = self.trie
+
+        for p, s in zip_longest(pref, suff[::-1]):
+            key = (p, s)
+            if key in trie.links:
+                trie = trie.links[key]
+            else:
+                return -1
+
+        return trie.key
+
+    def f(self, prefix: str, suffix: str) -> int:
+        return self._find_keys(prefix, suffix)  # k
