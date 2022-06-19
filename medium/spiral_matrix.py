@@ -28,46 +28,46 @@ class Solution:
     n - number of columns
     m - number of rows
     """
+
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        top = 0
-        right = len(matrix[0]) - 1
-        bottom = len(matrix) - 1
-        left = 0
+        first_row = 0
+        first_col = 0
+        last_row = len(matrix) - 1
+        last_col = len(matrix[0]) - 1
 
-        row = col = 0
         spiral_order = []
-        direction = 'r'
+        direction = "r"
+        while first_row <= last_row and first_col <= last_col:
+            if direction == "r":
+                cur_col = first_col
+                while cur_col <= last_col:
+                    spiral_order.append(matrix[first_row][cur_col])
+                    cur_col += 1
+                first_row += 1
+                direction = "d"
+            elif direction == "d":
+                cur_row = first_row
+                while cur_row <= last_row:
+                    spiral_order.append(matrix[cur_row][last_col])
+                    cur_row += 1
+                last_col -= 1
+                direction = "l"
 
-        while len(spiral_order) < len(matrix) * len(matrix[0]):
-            spiral_order.append(matrix[row][col])
-            if direction == 'r':
-                if col < right:
-                    col += 1
-                else:
-                    top += 1
-                    row += 1
-                    direction = 'd'
-            elif direction == 'd':
-                if row < bottom:
-                    row += 1
-                else:
-                    right -= 1
-                    col -= 1
-                    direction = 'l'
-            elif direction == 'l':
-                if col > left:
-                    col -= 1
-                else:
-                    bottom -= 1
-                    row -= 1
-                    direction = 'u'
-            elif direction == 'u':
-                if row > top:
-                    row -= 1
-                else:
-                    left += 1
-                    col += 1
-                    direction = 'r'
+            elif direction == "l":
+                cur_col = last_col
+                while cur_col >= first_col:
+                    spiral_order.append(matrix[last_row][cur_col])
+                    cur_col -= 1
+                last_row -= 1
+                direction = "u"
+
+            elif direction == "u":
+                cur_row = last_row
+                while cur_row >= first_row:
+                    spiral_order.append(matrix[cur_row][first_col])
+                    cur_row -= 1
+                first_col += 1
+                direction = "r"
 
         return spiral_order
 
