@@ -66,6 +66,29 @@ class Solution:
         return False
 
 
+class Solution2:
+    """Treat matrix as 1D array
+    Time: O(logN)
+    Space: O(1)
+    """
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        row_count = len(matrix)
+        col_count = len(matrix[0])
+        l, r = 0, row_count * col_count - 1
+
+        while l < r:
+            mid = (l + r) // 2
+            if target <= matrix[mid // col_count][mid % col_count]:
+                r = mid
+            else:
+                l = mid + 1
+
+        return matrix[l // col_count][l % col_count] == target
+
+
+@pytest.mark.parametrize(
+    "solution", [Solution, Solution2]
+)
 @pytest.mark.parametrize(
     "matrix,target,expected_result", (
         ([[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]], 3, True),
@@ -74,5 +97,5 @@ class Solution:
         ([[1], [3]], 3, True),
     )
 )
-def test_search(matrix, target, expected_result):
-    assert Solution().searchMatrix(matrix, target) == expected_result
+def test_search(solution, matrix, target, expected_result):
+    assert solution().searchMatrix(matrix, target) == expected_result
