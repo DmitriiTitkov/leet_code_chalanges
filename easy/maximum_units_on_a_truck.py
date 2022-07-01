@@ -35,6 +35,13 @@ import pytest
 
 
 class Solution:
+    """
+    Greedy on sorted boxTypes
+    Time: O(nlogn)
+    Space: O(1)
+
+    n - len of boxTypes
+    """
     def maximumUnits(self, boxTypes: List[List[int]], truckSize: int) -> int:
         boxTypes.sort(key=lambda x: x[1], reverse=True)
         total_units = 0
