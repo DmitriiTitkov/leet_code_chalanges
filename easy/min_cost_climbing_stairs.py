@@ -33,6 +33,13 @@ import pytest
 
 
 class Solution:
+    """
+    Use two pointers to remember two previous steps
+    Time: O(n)
+    Space: O(1)
+
+    n - length of cost array
+    """
     def minCostClimbingStairs(self, cost: List[int]) -> int:
         one_step_prev = 0
         two_step_prev = 0
