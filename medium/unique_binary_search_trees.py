@@ -19,6 +19,10 @@ import pytest
 
 
 class Solution:
+    """
+    Time: O(n)
+    Space: O(n)
+    """
     def numTrees(self, n: int) -> int:
 
         @cache
