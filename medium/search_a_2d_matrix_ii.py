@@ -56,6 +56,33 @@ class Solution:
         return False
 
 
+class Solution2:
+    """
+    Iterate from bottom left shrinking the matrix
+    Time: O(n + m)
+    Space: O(1)
+    """
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        row_count = len(matrix)
+        col_count = len(matrix[0])
+
+        row = row_count - 1
+        col = 0
+
+        while row >= 0 and col < col_count:
+            if matrix[row][col] == target:
+                return True
+            elif matrix[row][col] < target:
+                col += 1
+            else:
+                row -= 1
+
+        return False
+
+
+@pytest.mark.parametrize(
+    "solution", [Solution, Solution2]
+)
 @pytest.mark.parametrize(
     "matrix,target,expected_result", (
     (
@@ -82,5 +109,5 @@ class Solution:
     )
 )
 )
-def test_search_matrix(matrix, target, expected_result):
-    assert Solution().searchMatrix(matrix, target) == expected_result
+def test_search_matrix(solution, matrix, target, expected_result):
+    assert solution().searchMatrix(matrix, target) == expected_result
