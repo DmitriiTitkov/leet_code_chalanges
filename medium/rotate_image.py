@@ -20,6 +20,7 @@ n == matrix.length == matrix[i].length
 1 <= n <= 20
 -1000 <= matrix[i][j] <= 1000
 """
+from copy import deepcopy
 from typing import List
 
 import pytest
@@ -56,6 +57,33 @@ class Solution:
                 self.rotate_number(matrix, row, col)
 
 
+class Solution2:
+    """
+    Reverse rows and mirror matrix diagonally
+    Time: O(N)
+    Space: O(k) /as solution holds row in memory
+
+    k - amount of columns
+    """
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        row_num = len(matrix)
+        col_num = len(matrix[0])
+        for i, row in enumerate(matrix):
+            matrix[i] = row[::-1]
+
+        for row in range(row_num):
+            for col in range(col_num - row):
+                n_row = row_num - 1 - col
+                n_col = col_num - 1 - row
+                matrix[row][col], matrix[n_row][n_col] = matrix[n_row][n_col], matrix[row][col]
+
+
+@pytest.mark.parametrize(
+    "solution", (Solution, Solution2)
+)
 @pytest.mark.parametrize(
     "matrix,expected_output", (
         (
@@ -69,6 +97,7 @@ class Solution:
 
     )
 )
-def test_rotate_matrix(matrix, expected_output):
-    Solution().rotate(matrix)
-    assert matrix == expected_output
+def test_rotate_matrix(solution, matrix, expected_output):
+    m = deepcopy(matrix)
+    solution().rotate(m)
+    assert m == expected_output
